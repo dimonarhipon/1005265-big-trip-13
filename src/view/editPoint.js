@@ -159,5 +159,5 @@ export const createEditPointTemplate = () => {
         </section>
       </section>
     </form>
-  </li>`
-}
+  </li>`;
+};

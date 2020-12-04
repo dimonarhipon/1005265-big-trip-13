@@ -11,4 +11,4 @@ export const createRouteInformationTemplate = () => {
       Total: &euro;&nbsp;
     </p>
   </section>`;
-}
+};

@@ -13,7 +13,7 @@ const PLACE_IN_END = `beforeend`;
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
-}
+};
 
 
 const tripHeader = document.querySelector(`.trip-main`);
@@ -39,6 +39,4 @@ render(tripList, createEditPointTemplate(), PLACE_IN_END);
 for (let i = 0; i < ROUTE_COUNT; i++) {
   render(tripList, createPointTemplate(), PLACE_IN_END);
 }
-
-
 
