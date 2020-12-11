@@ -1,47 +1,68 @@
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
+
+const createItemOfferTemplate = (data = []) => {
+  return data.map(({name, isActive, price}) => (
+    isActive ?
+      `<li class="event__offer">
+        <span class="event__offer-title">${name}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${price}</span>
+      </li>`
+      : ``
+  )).join(` `);
+};
 
 export const createPointTemplate = (points) => {
-  const {type, destination, offers, isFavorite} = points;
+  const {type, city, time, price, offers, isFavorite} = points;
 
-  const createItemOffer = (data = []) => {
-    const offerLists = (array) => {
-      return array.map(({name, isActive, price}) => (
-        isActive ?
-          `<li class="event__offer">
-            <span class="event__offer-title">${name}</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">${price}</span>
-          </li>`
-          : ``
-      )).join(` `);
-    };
-    const result = offerLists(data);
+  const dateBegin = dayjs(time.begin).format(`D MMM`);
+  const dateEnd = dayjs(time.end).format(`D MMM`);
+  const beginDateBrowser = dayjs(time.begin).format(`YYYY-MM-DD`);
+  const timeBegin = dayjs(time.begin).format(`HH:mm`);
+  const timeEnd = dayjs(time.end).format(`HH:mm`);
+  const fullBeginDateBrowser = dayjs(time.begin).format(`YYYY-M-DDTHH:mm`);
+  const fullEndDateBrowser = dayjs(time.begin).format(`YYYY-M-DDTHH:mm`);
 
-    return result;
-  };
+  const firstDate = dayjs.duration({
+    days: dayjs(time.end).format(`DD`),
+    hours: dayjs(time.end).format(`HH`),
+    minutes: dayjs(time.end).format(`mm`),
+  });
+  const secondDate = dayjs.duration({
+    days: dayjs(time.begin).format(`DD`),
+    hours: dayjs(time.begin).format(`HH`),
+    minutes: dayjs(time.begin).format(`mm`),
+  });
+  const resultDays = firstDate.subtract(secondDate).days();
+  const resultHours = firstDate.subtract(secondDate).hours();
+  const resultMinutes = firstDate.subtract(secondDate).minutes();
+
 
   const favoriteClassName = isFavorite ? `event__favorite-btn--active` : ``;
 
   return `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="2019-03-18">MAR 18</time>
+      <time class="event__date" datetime="${beginDateBrowser}">${dateBegin}<br>${dateEnd}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${destination}</h3>
+      <h3 class="event__title">${type} ${city}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="2019-03-18T12:25">16:20</time>
+          <time class="event__start-time" datetime="${fullBeginDateBrowser}">${timeBegin}</time>
           &mdash;
-          <time class="event__end-time" datetime="2019-03-18T13:35">17:00</time>
+          <time class="event__end-time" datetime="${fullEndDateBrowser}">${timeEnd}</time>
         </p>
-        <p class="event__duration">40M</p>
+        <p class="event__duration">${resultDays}D ${resultHours}H ${resultMinutes}M</p>
       </div>
       <p class="event__price">
-        &euro;&nbsp;<span class="event__price-value">600</span>
+        &euro;&nbsp;<span class="event__price-value">${price}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        ${createItemOffer(offers)}
+        ${createItemOfferTemplate(offers)}
       </ul>
       <button class="event__favorite-btn ${favoriteClassName}" type="button">
         <span class="visually-hidden">Add to favorite</span>

@@ -1,34 +1,53 @@
+import dayjs from 'dayjs';
+import {MAX_PRICE, OFFERS, TYPES, CITIES} from '../const.js';
+
+const createEventOffers = (array) => {
+  return array.map(({name, isActive, price}) => (
+    `<div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-${name}" type="checkbox" name="event-offer-comfort" ${isActive ? `checked` : ` `}>
+      <label class="event__offer-label" for="event-offer-comfort-${name}">
+        <span class="event__offer-title">${name}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${price}</span>
+      </label>
+    </div>`
+  )).join(` `);
+};
+
+const createEventTypeItems = (array) => {
+  return array.map((type) => (
+    `<div class="event__type-item">
+      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+      <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type}-1">${type}</label>
+    </div>`
+  ));
+};
+
+const createDestinationLists = (array) => {
+  return array.map((city) => (
+    `<option value="${city}">${city}</option>`
+  ));
+};
 
 export const createEditPointTemplate = (point = {}) => {
   const {
     type = `Taxi`,
-    destination = `Amsterdam`,
-    offers = [
-      {
-        name: `Switch to comfort`,
-        isActive: false,
-        price: 80,
-      }
-    ],
+    city = `Amsterdam`,
+    time = {
+      begin: dayjs().add(0, `day`).add(4, `hour`).add(40, `minutes`).toDate(),
+      end: dayjs().add(1, `day`).add(5, `hour`).add(50, `minutes`).toDate()
+    },
+    price = MAX_PRICE,
+    offers = OFFERS,
     locationInformation = {
-      description: ``,
+      description: `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.
+      Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`,
       photo: `http://picsum.photos/248/152?r=1`,
     },
   } = point;
 
-
-  const createEvet = (array) => {
-    return array.map(({name, isActive, price}) => (
-      `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" ${isActive ? `checked` : ` `}>
-        <label class="event__offer-label" for="event-offer-comfort-1">
-          <span class="event__offer-title">${name}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${price}</span>
-        </label>
-      </div>`
-    )).join(` `);
-  };
+  const dateBegin = dayjs(time.begin).format(`DD/MM/YY HH:mm`);
+  const dateEnd = dayjs(time.end).format(`DD/MM/YY HH:mm`);
 
 
   return `<li class="trip-events__item">
@@ -44,12 +63,7 @@ export const createEditPointTemplate = (point = {}) => {
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
-
-              <div class="event__type-item">
-                <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-                <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
-              </div>
-              
+              ${createEventTypeItems(TYPES)}
             </fieldset>
           </div>
         </div>
@@ -58,20 +72,18 @@ export const createEditPointTemplate = (point = {}) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
           <datalist id="destination-list-1">
-            <option value="Amsterdam"></option>
-            <option value="Geneva"></option>
-            <option value="Chamonix"></option>
+            ${createDestinationLists(CITIES)}
           </datalist>
         </div>
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 12:25">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateBegin}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 13:35">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateEnd}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -79,7 +91,7 @@ export const createEditPointTemplate = (point = {}) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="160">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -93,7 +105,7 @@ export const createEditPointTemplate = (point = {}) => {
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
           <div class="event__available-offers">
-            ${createEvet(offers)}
+            ${createEventOffers(offers)}
           </div>
         </section>
 
