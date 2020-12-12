@@ -5,11 +5,15 @@ import {createFiltersTemplate} from './view/filters.js';
 import {createSortsTemplate} from './view/sorts.js';
 import {createEditPointTemplate} from './view/editPoint.js';
 import {createPointTemplate} from './view/point.js';
+import {generatePoint} from './mock/point.js';
 
 
-const ROUTE_COUNT = 3;
+const POINT_COUNT = 15;
 const PLACE_IN_BEGIN = `afterbegin`;
 const PLACE_IN_END = `beforeend`;
+
+
+const points = new Array(POINT_COUNT).fill().map(generatePoint);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -17,12 +21,12 @@ const render = (container, template, place) => {
 
 
 const tripHeader = document.querySelector(`.trip-main`);
-render(tripHeader, createRouteInformationTemplate(), PLACE_IN_BEGIN);
+render(tripHeader, createRouteInformationTemplate(points), PLACE_IN_BEGIN);
 
 
 const tripInfo = tripHeader.querySelector(`.trip-info`);
 const tripPrice = tripInfo.querySelector(`.trip-info__cost`);
-render(tripPrice, createPriceTemplate(), PLACE_IN_END);
+render(tripPrice, createPriceTemplate(points), PLACE_IN_END);
 
 
 const tripControls = tripHeader.querySelector(`.trip-controls`);
@@ -34,9 +38,9 @@ const tripEvents = document.querySelector(`.trip-events`);
 const tripList = tripEvents.querySelector(`.trip-events__list`);
 
 render(tripEvents, createSortsTemplate(), PLACE_IN_BEGIN);
-render(tripList, createEditPointTemplate(), PLACE_IN_END);
+render(tripList, createEditPointTemplate(points[0]), PLACE_IN_END);
 
-for (let i = 0; i < ROUTE_COUNT; i++) {
-  render(tripList, createPointTemplate(), PLACE_IN_END);
+for (let i = 0; i < POINT_COUNT; i++) {
+  render(tripList, createPointTemplate(points[i]), PLACE_IN_END);
 }
 
