@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import {MAX_PRICE, OFFERS, TYPES, CITIES} from '../const.js';
+import {createElement} from '../utils.js';
 
 const createEventOffers = (array) => {
   return array.map(({name, isActive, price}) => (
@@ -29,7 +30,7 @@ const createDestinationLists = (array) => {
   ));
 };
 
-export const createEditPointTemplate = (point = {}) => {
+const createEditPointTemplate = (point = {}) => {
   const {
     type = `Taxi`,
     city = `Amsterdam`,
@@ -122,3 +123,25 @@ export const createEditPointTemplate = (point = {}) => {
     </form>
   </li>`;
 };
+
+export default class EditPoint {
+  constructor(points) {
+    this._element = null;
+    this._points = points;
+  }
+
+  getTemplate() {
+    return createEditPointTemplate(this._points);
+  }
+
+  getElement() {
+    if (!this.element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

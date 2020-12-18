@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import {createElement} from '../utils.js';
+
 dayjs.extend(duration);
 
 const createItemOfferTemplate = (data = []) => {
@@ -14,7 +16,7 @@ const createItemOfferTemplate = (data = []) => {
   )).join(` `);
 };
 
-export const createPointTemplate = (points) => {
+const createPointTemplate = (points) => {
   const {type, city, time, price, offers, isFavorite} = points;
 
   const dateBegin = dayjs(time.begin).format(`D MMM`);
@@ -39,7 +41,6 @@ export const createPointTemplate = (points) => {
   const resultHours = firstDate.subtract(secondDate).hours();
   const resultMinutes = firstDate.subtract(secondDate).minutes();
 
-
   const favoriteClassName = isFavorite ? `event__favorite-btn--active` : ``;
 
   return `<li class="trip-events__item">
@@ -55,7 +56,7 @@ export const createPointTemplate = (points) => {
           &mdash;
           <time class="event__end-time" datetime="${fullEndDateBrowser}">${timeEnd}</time>
         </p>
-        <p class="event__duration">${resultDays}D ${resultHours}H ${resultMinutes}M</p>
+        <p class="event__duration">${resultDays === 0 ? `` : resultDays + `D`} ${resultHours === 0 ? `` : resultHours + `H`} ${resultMinutes === 0 ? `` : resultMinutes + `M`}</p>
       </div>
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${price}</span>
@@ -76,3 +77,25 @@ export const createPointTemplate = (points) => {
     </div>
 </li>`;
 };
+
+export default class Point {
+  constructor(points) {
+    this._element = null;
+    this._points = points;
+  }
+
+  getTemplate() {
+    return createPointTemplate(this._points);
+  }
+
+  getElement() {
+    if (!this.element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
