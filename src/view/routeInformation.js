@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
+import {createElement} from '../utils.js';
 
-export const createRouteInformationTemplate = (points) => {
+const createRouteInformationTemplate = (points) => {
+
   const cities = points.map(({city}, index) => (
     index === 0 ? `${city}` : `— ${city}`
   )).join(` `);
@@ -20,3 +22,25 @@ export const createRouteInformationTemplate = (points) => {
     </p>
   </section>`;
 };
+
+export default class RouteInformation {
+  constructor(points) {
+    this._element = null;
+    this._points = points;
+  }
+
+  getTemplate() {
+    return createRouteInformationTemplate(this._points);
+  }
+
+  getElement() {
+    if (!this.element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

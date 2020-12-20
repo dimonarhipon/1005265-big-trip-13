@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
 import {getRandomInteger} from '../utils.js';
-const MAX_MINUTE_GAP = 59;
-import {IMAGE_CAP, MAX_NUMBER_IMAGE, MIN_PRICE, MAX_PRICE, MIN_DAYS_GAP, MAX_DAYS_GAP_1, MAX_DAYS_GAP_2, MAX_HOUR_GAP, TYPES, CITIES, TEXT, OFFERS} from '../const.js';
+import {IMAGE_CAP, MAX_NUMBER_IMAGE, MIN_PRICE, MAX_PRICE, MIN_DAYS_GAP, MAX_DAYS_GAP_1, MAX_DAYS_GAP_2, MAX_MINUTE_GAP, MAX_HOUR_GAP, TYPES, CITIES, TEXT, OFFERS} from '../const.js';
 
 
 const generateDate = (minDaysGap, maxDaysGap, maxHoursGap, maxMinuteGap) => {
+  // begin: generateDate(MIN_DAYS_GAP, MAX_DAYS_GAP_1, MAX_HOUR_GAP, MAX_MINUTE_GAP),
+  // end: generateDate(MIN_DAYS_GAP, MAX_DAYS_GAP_2, MAX_HOUR_GAP, MAX_MINUTE_GAP)
   if (maxDaysGap > 3) {
-    minDaysGap = MAX_DAYS_GAP_1;
+    minDaysGap = MAX_DAYS_GAP_1 + 1;
   }
 
   const daysGap = getRandomInteger(minDaysGap, maxDaysGap);

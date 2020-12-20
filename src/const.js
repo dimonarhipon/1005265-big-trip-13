@@ -5,8 +5,8 @@ export const MIN_PRICE = 10;
 export const MAX_PRICE = 200;
 
 export const MIN_DAYS_GAP = 0;
-export const MAX_DAYS_GAP_1 = 3;
-export const MAX_DAYS_GAP_2 = 7;
+export const MAX_DAYS_GAP_1 = 1;
+export const MAX_DAYS_GAP_2 = 4;
 export const MAX_HOUR_GAP = 23;
 export const MAX_MINUTE_GAP = 59;
 
