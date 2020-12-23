@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
 dayjs.extend(duration);
 
@@ -20,7 +20,7 @@ const createPointTemplate = (points) => {
   const {type, city, time, price, offers, isFavorite} = points;
 
   const dateBegin = dayjs(time.begin).format(`D MMM`);
-  const dateEnd = dayjs(time.end).format(`D MMM`);
+  // const dateEnd = dayjs(time.end).format(`D MMM`);
   const beginDateBrowser = dayjs(time.begin).format(`YYYY-MM-DD`);
   const timeBegin = dayjs(time.begin).format(`HH:mm`);
   const timeEnd = dayjs(time.end).format(`HH:mm`);
@@ -45,7 +45,7 @@ const createPointTemplate = (points) => {
 
   return `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="${beginDateBrowser}">${dateBegin}<br>${dateEnd}</time>
+      <time class="event__date" datetime="${beginDateBrowser}">${dateBegin}<br></time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
@@ -78,24 +78,25 @@ const createPointTemplate = (points) => {
 </li>`;
 };
 
-export default class Point {
+export default class Point extends AbstractView {
   constructor(points) {
-    this._element = null;
+    super();
     this._points = points;
+
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
     return createPointTemplate(this._points);
   }
 
-  getElement() {
-    if (!this.element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
 
-  removeElement() {
-    this._element = null;
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().addEventListener(`click`, this._clickHandler);
   }
 }
