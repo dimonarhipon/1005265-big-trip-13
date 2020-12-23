@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
 const createRouteInformationTemplate = (points) => {
 
@@ -23,24 +23,13 @@ const createRouteInformationTemplate = (points) => {
   </section>`;
 };
 
-export default class RouteInformation {
+export default class RouteInformation extends AbstractView {
   constructor(points) {
-    this._element = null;
+    super();
     this._points = points;
   }
 
   getTemplate() {
     return createRouteInformationTemplate(this._points);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

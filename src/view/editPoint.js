@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import {MAX_PRICE, OFFERS, TYPES, CITIES} from '../const.js';
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
 const createEventOffers = (array) => {
   return array.map(({name, isActive, price}) => (
@@ -124,24 +124,36 @@ const createEditPointTemplate = (point = {}) => {
   </li>`;
 };
 
-export default class EditPoint {
+export default class EditPoint extends AbstractView {
   constructor(points) {
-    this._element = null;
+    super();
     this._points = points;
+
+    this._submitHandler = this._submitHandler.bind(this);
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
     return createEditPointTemplate(this._points);
   }
 
-  getElement() {
-    if (!this.element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _submitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submit();
   }
 
-  removeElement() {
-    this._element = null;
+  setFormSubmitHandler(callback) {
+    this._callback.submit = callback;
+    this.getElement().addEventListener(`submit`, this._submitHandler);
+  }
+
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
+  }
+
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().addEventListener(`click`, this._clickHandler);
   }
 }
